@@ -132,5 +132,5 @@ and deaths.date = vax.date
 where deaths.continent is not null
 
 
---Select *
---from PercentPopulationVaccinated
+Select *
+from PercentPopulationVaccinated
