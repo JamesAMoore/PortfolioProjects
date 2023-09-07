@@ -58,8 +58,8 @@ from
 where 
 	c.Location = 'United States'
 order by
-	c.location
-  , c.date
+	  c.location
+	, c.date
 
 -- Looking at countries with highest infection rate
 select 
@@ -94,13 +94,13 @@ select
 	, Sum(Max_Deaths) as Total_Deaths_Per_Continent
 from (
 	Select 
-		c.continent
-	  , Max(total_deaths) as Max_Deaths
+		  c.continent
+		, Max(total_deaths) as Max_Deaths
 	from 
-		CovidDeaths c
+		  CovidDeaths c
 	group by 
-		c.continent
-	 ,  c.location
+		  c.continent
+		, c.location
 ) as Max_Deaths_Per_Country
 where 
 	continent is not null
