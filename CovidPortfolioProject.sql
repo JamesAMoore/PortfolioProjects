@@ -24,7 +24,7 @@ select
 	, c.total_deaths
 	, c.population
 from 
-	CovidDeaths c
+	  CovidDeaths c
 order by 
 	  c.location
 	, c.date
@@ -32,11 +32,27 @@ order by
 -- Looking at total cases vs total deaths
 -- Chance of dying if you contract covid in the United States 
 select 
-	c.location
-  , c.date
-  , c.total_cases
-  , c.total_deaths
-  , CAST(c.total_deaths AS float) / c.total_cases *100 as Death_Percentage
+	  c.location
+	, c.date
+	, c.total_cases
+	, c.total_deaths
+	, CAST(c.total_deaths AS float) / c.total_cases *100 as Death_Percentage
+from 
+	  CovidDeaths c
+where 
+	  c.Location = 'United States'
+order by
+	  c.location
+	, c.date
+
+-- Looking at total cases vs population
+-- Show what percent of population got Covid
+select 
+	  c.Location
+	, c.date
+	, c.population
+	, c.total_cases
+	, CAST(c.total_cases AS float) / c.population *100 as Percent_of_Infected
 from 
 	CovidDeaths c
 where 
@@ -45,38 +61,24 @@ order by
 	c.location
   , c.date
 
--- Looking at total cases vs population
--- Show what percent of population got Covid
-select 
-	c.Location
-  , c.date
-  , c.population
-  , c.total_cases
-  , CAST(c.total_cases AS float) / c.population *100 as Percent_of_Infected
-from CovidDeaths c
-where 
-	c.Location = 'United States'
-order by
-	c.location
-  , c.date
-
 -- Looking at countries with highest infection rate
 select 
-	c.location
-  , c.population
-  , MAX(c.total_cases) as Total_cases_Per_Country
-  , (CAST(MAX(c.total_cases) As Float) / c.population) *100 as Percent_of_Population_Infected
-from CovidDeaths c
+	  c.location
+	, c.population
+	, MAX(c.total_cases) as Total_cases_Per_Country
+	, (CAST(MAX(c.total_cases) As Float) / c.population) *100 as Percent_of_Population_Infected
+from 
+	CovidDeaths c
 group by 
-	c.location
-  , c.population
+	  c.location
+	, c.population
 order by 
 	Percent_of_Population_Infected desc
 
 -- Show countries with highest death count per population
 select 
-	c.location
-  , MAX(c.total_deaths) as Total_Deaths_Per_Country
+	  c.location
+	, MAX(c.total_deaths) as Total_Deaths_Per_Country
 from 
 	CovidDeaths c
 where 
@@ -88,12 +90,12 @@ order by
 
 -- Breakdown of deaths by continent
 select 
-	continent
-  , Sum(Max_Deaths) as Total_Deaths_Per_Continent
+	  continent
+	, Sum(Max_Deaths) as Total_Deaths_Per_Continent
 from (
 	Select 
 		c.continent
-	 ,  Max(total_deaths) as Max_Deaths
+	  , Max(total_deaths) as Max_Deaths
 	from 
 		CovidDeaths c
 	group by 
@@ -109,9 +111,9 @@ order by
 
 -- Global death percentage
 select 
-	Sum(c.new_cases) as total_cases
-  , Sum(c.new_deaths) as total_deaths
-  , Sum(c.new_deaths) / Sum(c.new_cases) * 100  as Death_Percentage
+	  Sum(c.new_cases) as total_cases
+	, Sum(c.new_deaths) as total_deaths
+	, Sum(c.new_deaths) / Sum(c.new_cases) * 100  as Death_Percentage
 from 
 	CovidDeaths c
 where 
@@ -120,12 +122,12 @@ where
 
 -- Number of deaths vs cases daily
 SELECT
-	c.date
-  , SUM(new_cases) AS cases_per_day
-  , SUM(new_deaths) AS deaths_per_day
-  , CASE WHEN SUM(c.new_cases) <> 0
-		 THEN (SUM(c.new_deaths) / NULLIF(SUM(new_cases), 0)) * 100
-         ELSE NULL
+	  c.date
+	, SUM(new_cases) AS cases_per_day
+	, SUM(new_deaths) AS deaths_per_day
+	, CASE WHEN SUM(c.new_cases) <> 0
+		THEN (SUM(c.new_deaths) / NULLIF(SUM(new_cases), 0)) * 100
+		ELSE NULL
 	END AS Death_Percentage
 FROM 
 	CovidDeaths c
@@ -139,12 +141,12 @@ ORDER BY
 
 -- Total population, Newly Vaccinated Daily, Total Vaccinated Count 
 select 
-	d.continent
-  , d.location
-  , d.date
-  , d.population
-  , v.new_vaccinations
-  , SUM(convert(bigint,v.new_vaccinations)) OVER (Partition by d.location order by d.location, d.date) as rolling_count_of_vaccinated
+	  d.continent
+	, d.location
+	, d.date
+	, d.population
+	, v.new_vaccinations
+	, SUM(convert(bigint,v.new_vaccinations)) OVER (Partition by d.location order by d.location, d.date) as rolling_count_of_vaccinated
 from 
 	CovidDeaths d
 join 
@@ -156,8 +158,8 @@ and
 where 
 	d.continent is not null
 order by
-	d.location
-  , d.date
+	  d.location
+	, d.date
 
 
 -- Temp Table
@@ -175,12 +177,12 @@ Rolling_people_vaccinated bigint
 
 Insert into #PercentPopulationVaccinated 
 select 
-	d.continent
-  , d.location
-  , d.date
-  , d.population
-  , v.new_vaccinations
-  , SUM(convert(bigint,v.new_vaccinations)) OVER (Partition by d.location order by d.location, d.date) as rolling_count_of_vaccinated
+	  d.continent
+	, d.location
+	, d.date
+	, d.population
+	, v.new_vaccinations
+	, SUM(convert(bigint,v.new_vaccinations)) OVER (Partition by d.location order by d.location, d.date) as rolling_count_of_vaccinated
 from 
 	CovidDeaths d
 join 
@@ -197,8 +199,8 @@ Select
 from 
 	#PercentPopulationVaccinated
 order by
-	continent
-  , location
+	  continent
+	, location
 
 --Creating View to store data for later visualization
 GO
