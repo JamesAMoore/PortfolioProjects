@@ -17,17 +17,17 @@ order by
 
 --Select relevant data that I want to work with
 select 
-c.location
-  , c.date
-  , c.total_cases
-  , c.new_cases
-  , c.total_deaths
-  , c.population
+	  c.location
+	, c.date
+	, c.total_cases
+	, c.new_cases
+	, c.total_deaths
+	, c.population
 from 
 	CovidDeaths c
 order by 
-	c.location
-  , c.date
+	  c.location
+	, c.date
 
 -- Looking at total cases vs total deaths
 -- Chance of dying if you contract covid in the United States 
