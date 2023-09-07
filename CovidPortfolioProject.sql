@@ -17,7 +17,7 @@ order by
 
 --Select relevant data that I want to work with
 select 
-	c.location
+c.location
   , c.date
   , c.total_cases
   , c.new_cases
@@ -32,7 +32,7 @@ order by
 -- Looking at total cases vs total deaths
 -- Chance of dying if you contract covid in the United States 
 select 
-	c.Location
+	c.location
   , c.date
   , c.total_cases
   , c.total_deaths
